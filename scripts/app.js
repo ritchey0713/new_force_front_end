@@ -14,10 +14,18 @@ const createObjs = (json) => {
         let seasons = json.included.filter((season) => {
             return season.relationships.team_member.data.id === team_member.id
         })
-        teamMember.seasons = seasons
+        createSeasons(teamMember, seasons)
+        // teamMember.seasons = seasons
         allMembers.push(teamMember)
     })
     generateTeamList(allMembers)
+}
+
+const createSeasons = (teamMember, seasons) => {
+    seasons.forEach((season) => {
+        let seasonObj = new Season(season)
+        teamMember.seasons.push(seasonObj)
+    })
 }
 
 
@@ -32,7 +40,7 @@ const generateTeamList = (allMembers) => {
     if (allMembers.length > 0){
         allMembers.forEach((member => {
             const itemEl = document.createElement("li")
-            itemEl.classList.add("team-member")
+            itemEl.classList.add(`team-member-${member.uplay}`)
             // renderTeam(member)
             itemEl.textContent = member.uplay
             listEl.appendChild(itemEl)
